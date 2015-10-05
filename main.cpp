@@ -88,6 +88,8 @@ int main()
 			cout<<to_string(assignment_handler.CountLate())<<" late assignments.\n";
 			break;
 		case 7://saves assignments to textfile
+			//i need to be very careful doing this, because i am writing to the same file i depend on reading from
+			//going to try a couple different things in a separate copy, will upload best option
 			break;
 		case 8://exists program
 			still_in_menu = false;
