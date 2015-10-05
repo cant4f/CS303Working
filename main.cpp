@@ -70,11 +70,11 @@ int main()
 			cin>>due;
 			assignment_handler.EditAssignmentDue(assigned,due);			
 			break;
-		case 4://change description
+		case 4://change description BE VERY CAREFUL!!! IT DOES NOT LIKE HAVING A STRING WITH SPACES PASSED IN!!!
 			cout<<"Please enter the assign date of the assignment you wish to change using the format MM/DD/YYYY\n:";
 			cin>>assigned;
-			cout<<"Please enter the new description of the assignment you are changing\n:";
-			cin>>description;
+			cout<<"Please enter the new description of the assignment you are changing\n:";//avoid using spaces for the moment
+			cin>>description;//NO SPACES!!!!
 			assignment_handler.EditAssignmentDescrip(assigned,description);
 			break;
 		case 5://complete an assignment
