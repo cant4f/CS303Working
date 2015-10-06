@@ -1,21 +1,19 @@
-//#ifndef D_LINKED_LIST_CONST_ITERATOR_H_
-//#define D_LINKED_LIST_CONST_ITERATOR_H_
+
 #ifndef LIST_CONST_ITERATOR_H
 #define LIST_CONST_ITERATOR_H
 
-//#include "list.h"//added
 
-//template<typename Item_Type>//added this to try to fix errors
+//added this to try to fix errors
 class const_iterator {
 	// Give the parent class access to this class.
-	friend class list<Item_Type>;//changed
+	friend class List<Item_Type>;//changed
 
 private:
 	// Data fields
 	/** A reference to the parent list */
-    const list<Item_Type>* parent;//changed
+	const List<Item_Type>* parent;//changed
 	/** A pointer to the current DNode */
-	typename list<Item_Type>::DNode* current;//changed
+	typename List<Item_Type>::DNode* current;//changed
 	// Member functions
 	/** Constructs an iterator that references a specific DNode.
 	Note: this constructor is private. Only the list class
@@ -23,10 +21,10 @@ private:
 	@param my_parent A reference to the list
 	@param position A pointer to the current DNode
 	*/
-	const_iterator(const list<Item_Type>* my_parent, DNode* position) :
+	const_iterator(const List<Item_Type>* my_parent, DNode* position) :
 		parent(my_parent), current(position) {}//changed
-	
-	
+
+
 	/** Returns a reference to the currently referenced item.
 	@return A reference to the currently referenced item
 	@throws std::invalid_argument if this iterator is at end
