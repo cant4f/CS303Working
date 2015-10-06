@@ -1,8 +1,10 @@
 #include <string>
-#include "assignmentHandler.h"
+#include "AssignmentHandler.h"
 #include "Date.h"
 #include "Assignment.h"
-#include "list.h"
+#include "List.h"
+#include "List_Const_Iterator.h"
+#include "List_Iterator.h"
 
 //will be adding more error detection/correction to the code - CN
 
@@ -10,7 +12,7 @@
 void AssignmentHandler::Add_Assignment(const string& dataline)
 {
 	Assignment temp(dataline);
-	if(temp.getStringStatus() == "Assigned")
+	if (temp.getStringStatus() == "Assigned")
 		Add_To_Assignments(temp);
 	else
 		Add_To_Completes(temp);
@@ -19,16 +21,34 @@ void AssignmentHandler::Add_Assignment(const string& dataline)
 //prints the assignments from both lists to the designated ostream
 void AssignmentHandler::DisplayAssignments(ostream& cout)
 {
-	list<Assignment>::iterator itr = Assigned_Assignments.begin();
-	while(itr != Assigned_Assignments.end())
+	cout << endl << "Assigned Assignments:" << endl;
+	List<Assignment>::iterator itr = Assigned_Assignments.begin();
+	while (itr != Assigned_Assignments.end())
 	{
-		cout<<itr->GetdueDate()<<","<<itr->getDescription()<<","<<itr->GetAssignDate()<<","<<itr->getStringStatus()<<endl;
+		cout << itr->GetdueDate() << "," << itr->getDescription() << "," << itr->GetAssignDate() << "," << itr->getStringStatus() << endl;
+		++itr;
+	}
+	cout << endl << "Completed Assignments:" << endl;
+	itr = Completed_Assignments.begin();
+	while (itr != Completed_Assignments.end())
+	{
+		cout << itr->GetdueDate() << "," << itr->getDescription() << "," << itr->GetAssignDate() << "," << itr->getStringStatus() << endl;
+		++itr;
+	}
+}
+
+void AssignmentHandler::SaveToFile(ostream& cout)
+{
+	List<Assignment>::iterator itr = Assigned_Assignments.begin();
+	while (itr != Assigned_Assignments.end())
+	{
+		cout << itr->GetdueDate() << "," << itr->getDescription() << "," << itr->GetAssignDate() << "," << itr->getStringStatus() << endl;
 		++itr;
 	}
 	itr = Completed_Assignments.begin();
-	while(itr != Completed_Assignments.end())
+	while (itr != Completed_Assignments.end())
 	{
-		cout<<itr->GetdueDate()<<","<<itr->getDescription()<<","<<itr->GetAssignDate()<<","<<itr->getStringStatus()<<endl;
+		cout << itr->GetdueDate() << "," << itr->getDescription() << "," << itr->GetAssignDate() << "," << itr->getStringStatus() << endl;
 		++itr;
 	}
 }
@@ -36,11 +56,11 @@ void AssignmentHandler::DisplayAssignments(ostream& cout)
 //counts the number of late assignments
 int AssignmentHandler::CountLate()
 {
-	int count=0;
-	list<Assignment>::iterator itr = Completed_Assignments.begin();
-	while(itr != Completed_Assignments.end())
+	int count = 0;
+	List<Assignment>::iterator itr = Completed_Assignments.begin();
+	while (itr != Completed_Assignments.end())
 	{
-		if(itr->getStatus() == AssignStatus::Late)
+		if (itr->getStatus() == AssignStatus::Late)
 			++count;
 		++itr;//forgot to incriment the iterator, my bad
 	}
@@ -50,70 +70,76 @@ int AssignmentHandler::CountLate()
 //finds an assignment, marks it complete or late, adds it to the completed list and removes it from the assigned list
 void AssignmentHandler::CompleteAssignment(string uniqueDate, string completeDate)
 {
-	list<Assignment>::iterator litr = findAssignment(uniqueDate);
+	List<Assignment>::iterator litr = findAssignment(uniqueDate);
 	litr->completeAssignment(Date(completeDate));
 	Assignment temp(*litr);
-	list<Assignment>::iterator citr = Completed_Assignments.begin();
-	while(citr != Completed_Assignments.end() && *citr < temp)
+	List<Assignment>::iterator citr = Completed_Assignments.begin();
+	while (citr != Completed_Assignments.end() && *citr < temp)
 	{
 		++citr;
 	}
-	Completed_Assignments.insert(citr,temp);
+	Completed_Assignments.insert(citr, temp);
 	Assigned_Assignments.remove(temp);
 }
 
 //finds an assignment and edits its description
 void AssignmentHandler::EditAssignmentDescrip(string uniqueDate, string newDescrip)
 {
-	list<Assignment>::iterator itr = findAssignment(uniqueDate);
+	List<Assignment>::iterator itr = findAssignment(uniqueDate);
 	itr->changeDescription(newDescrip);
 
 }
 
 //finds an asignment and edits its due date
-void AssignmentHandler::EditAssignmentDue(string uniqueDate,string newDue)
+void AssignmentHandler::EditAssignmentDue(string uniqueDate, string newDue)
 {
-	list<Assignment>::iterator itr = findAssignment(uniqueDate);
+	List<Assignment>::iterator itr = findAssignment(uniqueDate);
 	itr->changeDueDate(newDue);
 }
 
 //puts an assignment into the assigned list IN ORDERED FASHION
 void AssignmentHandler::Add_To_Assignments(Assignment assignment)
 {
-	list<Assignment>::iterator itr = Assigned_Assignments.begin();
-	while(itr != Assigned_Assignments.end() && *itr < assignment)
+	List<Assignment>::iterator itr = Assigned_Assignments.begin();
+	while (itr != Assigned_Assignments.end() && *itr < assignment)
 	{
 		++itr;
 	}
-	Assigned_Assignments.insert(itr,assignment);
+	Assigned_Assignments.insert(itr, assignment);
 }
 
 //puts an assignment into the completed list IN ORDERED FASHION
 void AssignmentHandler::Add_To_Completes(Assignment assignment)
 {
-	list<Assignment>::iterator itr = Completed_Assignments.begin();
-	while(itr != Completed_Assignments.end() && *itr < assignment)
+	List<Assignment>::iterator itr = Completed_Assignments.begin();
+	while (itr != Completed_Assignments.end() && *itr < assignment)
 	{
 		++itr;
 	}
-	Completed_Assignments.insert(itr,assignment);
+	Completed_Assignments.insert(itr, assignment);
 }
 
 //finds an assignment since the find function of list wont find an assignment based on a string
-list<Assignment>::iterator AssignmentHandler::findAssignment(string uniqueDate)
+List<Assignment>::iterator AssignmentHandler::findAssignment(string uniqueDate)
 {
-	list<Assignment>::iterator itr = Assigned_Assignments.begin();
-	while(itr != Assigned_Assignments.end())
+	List<Assignment>::iterator itr = Assigned_Assignments.begin();
+	while (itr != Assigned_Assignments.end())
 	{
-		if(itr->GetAssignDate() == uniqueDate)
+		if (itr->GetAssignDate() == uniqueDate)
 			return itr;
 		++itr;
 	}
 	itr = Completed_Assignments.begin();
-	while(itr != Completed_Assignments.end())
+	while (itr != Completed_Assignments.end())
 	{
-		if(itr->GetAssignDate() == uniqueDate)
+		if (itr->GetAssignDate() == uniqueDate)
 			return itr;
 		++itr;
 	}
+}
+AssignmentHandler& AssignmentHandler::operator =(const AssignmentHandler& other)
+{
+	Assigned_Assignments = other.Assigned_Assignments;
+	Completed_Assignments = other.Completed_Assignments;
+	return *this;
 }
