@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -15,7 +16,7 @@ using namespace std;
 
 int start_menu();
 
-AssignmentHandler handle_choice(const int choice, AssignmentHandler assignment_handler);
+AssignmentHandler handle_choice(const int choice, AssignmentHandler& assignment_handler, ofstream& out);
 
 int main()
 {
@@ -43,6 +44,7 @@ int main()
 	int choice = 0;
 	ifstream fin;// ("testfile.txt");
 	ofstream fout;
+	
 
 	/*cout << "Please enter text file name to populate lists from without the .txt extension: ";
 	cin >> filename;
@@ -91,15 +93,15 @@ int main()
 		assignment_handler.Add_Assignment(textline);
 	}
 
+	fin.close();
+	fout.open(filename, ios_base::trunc);
+	
 	do
 	{ 
 		choice = start_menu();
-		assignment_handler = handle_choice(choice, assignment_handler);
+		assignment_handler = handle_choice(choice, assignment_handler, fout);
 	} while (choice != 8); // exits program if choice is 8
 	
-	
-
-	fin.close();
 	fout.close();
 	system("pause");
 	return 0;
@@ -149,8 +151,9 @@ int start_menu()
 // Function takes int value returned by start_menu() function
 // Performs corresponding task based on user input
 // Returns nothing
-AssignmentHandler handle_choice(const int choice, AssignmentHandler assignment_handler)
+AssignmentHandler handle_choice(const int choice, AssignmentHandler& assignment_handler, ofstream& out)
 {
+	//AssignmentHandler temp;
 	string textline;
 	string due, description, assigned, status;
 	switch (choice)//will probably put into seperate function to reduce clutter
@@ -164,34 +167,36 @@ AssignmentHandler handle_choice(const int choice, AssignmentHandler assignment_h
 		cout << "\nPlease enter the assignments data in one line in the following manner;\nDue date,description,assigned dates,status\nwith the dates in the format MM/DD/YYYY\n:";
 		cin >> textline;
 		assignment_handler.Add_Assignment(textline);
-		break;
+		//temp = assignment_handler;
+		return assignment_handler;
 	case 3://change due date
 		cout << "Please enter the assign date of the assignment you wish to change using the format MM/DD/YYYY\n:";
 		cin >> assigned;
 		cout << "Please enter the new due date of the assignment you are changing in the format MM/DD/YYYY\n:";
 		cin >> due;
 		assignment_handler.EditAssignmentDue(assigned, due);
-		break;
+		return assignment_handler;
 	case 4://change description BE VERY CAREFUL!!! IT DOES NOT LIKE HAVING A STRING WITH SPACES PASSED IN!!!
 		cout << "Please enter the assign date of the assignment you wish to change using the format MM/DD/YYYY\n:";
 		cin >> assigned;
 		cout << "Please enter the new description of the assignment you are changing\n:";//avoid using spaces for the moment
 		cin >> description;//NO SPACES!!!!
 		assignment_handler.EditAssignmentDescrip(assigned, description);
-		break;
+		return assignment_handler;
 	case 5://complete an assignment
 		cout << "Please enter the assign date of the assignmeent you wish to complete using the format MM/DD/YYYY\n:";
 		cin >> assigned;
 		cout << "Please enter the date the assignment was completed in the format MM/DD/YYYY\n:";
 		cin >> due;//using due again instead of making a new variable
 		assignment_handler.CompleteAssignment(assigned, due);
-		break;
+		return assignment_handler;
 	case 6://count late assignments
 		cout << to_string(assignment_handler.CountLate()) << " late assignments.\n";
 		break;
 	case 7://saves assignments to textfile
 		//i need to be very careful doing this, because i am writing to the same file i depend on reading from
 		//going to try a couple different things in a separate copy, will upload best option
+		assignment_handler.SaveToFile(out);
 		break;
 	case 8://exists program
 		break;
