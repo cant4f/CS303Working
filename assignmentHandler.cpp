@@ -42,6 +42,7 @@ int AssignmentHandler::CountLate()
 	{
 		if(itr->getStatus() == AssignStatus::Late)
 			++count;
+		++itr;//forgot to incriment the iterator, my bad
 	}
 	return count;
 }
