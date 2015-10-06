@@ -1,10 +1,9 @@
 #ifndef LIST_H
 #define LIST_H
 #include <cstddef>
-#include "Assignment.h"
 
 template<typename Item_Type>
-class list {
+class List {
 
 private:
 	struct DNode {
@@ -33,30 +32,30 @@ private:
 public:
 
 	// Insert definition of nested class iterator here.
-#include "list_iterator.h"
+#include "List_Iterator.h"
 	// Give iterator access to private members of list.
 	friend class iterator;
-	
+
 	// Insert definition of nested class const_iterator here.
-#include "list_const_iterator.h"
+#include "List_Const_Iterator.h"
 	// Give const_iterator access to private members of list.
 	friend class const_iterator;
-	
-	
+
+
 	/** Construct an empty list. */
-	list() : head(NULL), tail(NULL), num_items(0) { }
+	List() : head(NULL), tail(NULL), num_items(0) { }
 
 	/** Construct a copy of a list. */
-	list(const list<Item_Type>& other) : head(NULL),
+	List(const List<Item_Type>& other) : head(NULL),
 		tail(NULL), num_items(0) {
 		for (const_iterator itr = other.begin(); itr != other.end(); ++itr) {
 			push_back(*itr);
 		}
 	}
-	
+
 
 	/** Destroy a list. */
-	~list() {
+	~List() {
 		while (head != NULL) {
 			DNode* current = head;
 			head = head->next;
@@ -73,7 +72,7 @@ public:
 
 	/** Return a const_iterator to the beginning of the list */
 	const_iterator begin() const {
-		return const_iterator(this,head);
+		return const_iterator(this, head);
 	}
 
 	/** Return an iterator to the end of the list */
@@ -87,9 +86,9 @@ public:
 	}
 
 	/** Assign the contents of one list to another. */
-	list<Item_Type>& operator=(const list<Item_Type>& other) {
+	List<Item_Type>& operator=(const List<Item_Type>& other) {
 		// Make a copy of the other list.
-		list<Item_Type> temp_copy(other);
+		List<Item_Type> temp_copy(other);
 		// Swap contents of self with the copy.
 		swap(temp_copy);
 		// Return -- upon return the old value will be destroyed.
@@ -191,8 +190,8 @@ public:
 				current_node = current_node->next;
 		}
 	}
-	
-	
+
+
 	iterator erase(iterator pos) {
 		if (empty())
 			throw std::invalid_argument("Attempt to call erase on an empty list");
@@ -221,7 +220,7 @@ public:
 	}
 
 	bool empty(){
-	
+
 		return num_items == 0;
 	}
 
@@ -251,7 +250,7 @@ public:
 		return NULL;
 	}
 
-	void swap(list<Item_Type> other){
+	void swap(List<Item_Type> other){
 
 	}
 
