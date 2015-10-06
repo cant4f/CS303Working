@@ -1,20 +1,19 @@
-//#ifndef D_LINKED_LIST_ITERATOR_H_
-//#define D_LINKED_LIST_ITERATOR_H_
+
 #ifndef LIST_ITERATOR_H
 #define LIST_ITERATOR_H
 
-//#include "list.h"//added
+#include "List.h"
 
-//template<typename Item_Type>//added this to try to fix errors
+//added this to try to fix errors
 class iterator {
 	// Give the parent class access to this class.
-	friend class list<Item_Type>;//changed
+	friend class List<Item_Type>;//changed
 private:
 	// Data fields
 	/** A reference to the parent list */
-	list<Item_Type>* parent;//changed
+	List<Item_Type>* parent;//changed
 	/** A pointer to the current DNode */
-	typename list<Item_Type>::DNode* current;//changed
+	typename List<Item_Type>::DNode* current;//changed
 	// Member functions
 	/** Constructs an iterator that references a specific DNode.
 	Note: this constructor is private. Only the list class
@@ -22,7 +21,7 @@ private:
 	@param my_parent A reference to the list
 	@param position A pointer to the current DNode
 	*/
-	iterator(list<Item_Type>* my_parent, DNode* position) :
+	iterator(List<Item_Type>* my_parent, DNode* position) :
 		parent(my_parent), current(position) {}//changed
 
 public:
@@ -68,7 +67,7 @@ public:
 		return *this;
 	}
 
-	
+
 	iterator& operator++(int) {
 		// Make a copy of the current value.
 		iterator return_value = *this;
@@ -101,4 +100,3 @@ public:
 };
 
 #endif
-
